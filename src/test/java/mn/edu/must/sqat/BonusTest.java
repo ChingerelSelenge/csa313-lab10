@@ -83,4 +83,12 @@ class BonusTest {
 
         assertEquals(5, DataFlowTargets.bonus(attendance, 5));
     }
+
+    @Test
+    @DisplayName("DU: score definition at 49 reaches use at 54")
+    void testScore49To54() {
+        int[] attendance = { 1, 1, 1, 1, 1 };
+
+        assertEquals(3, DataFlowTargets.bonus(attendance, 6));
+    }
 }
