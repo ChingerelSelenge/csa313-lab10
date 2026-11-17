@@ -1,10 +1,14 @@
 # Lab 10 — Өгөгдлийн урсгалын тест: Definition-Use хосууд
 
-**Хичээл:** F.CSA313 — Программ хангамжийн чанарын баталгаа ба тест  
-**Оюутны нэр:** С.Чингэрэл  
+**Хичээл:** F.CSA313 — Программ хангамжийн чанарын баталгаа ба тест
+
+**Оюутны нэр:** С.Чингэрэл
+
 **Оюутны код:** B232270010
 
-## Орчны мэдээлэл
+---
+
+# Орчны мэдээлэл
 
 ### Java version
 
@@ -50,15 +54,17 @@ OS name: "linux", version: "6.12.115+deb13.1-amd64", arch: "amd64", family: "uni
 | x | 13 | 20 | c-use | 13 → 15(F) → 20 | testGcd7And0 |
 | x | 17 | 16 | c-use | 17 → 18 → 15(T) → 16 | testGcd12And8 |
 | x | 17 | 20 | c-use | 17 → 18 → 15(F) → 20 | testGcd0And5 |
-| y | 13 | 15 | p-use | 13 → 15 (T/F) | testGcd7And0, testGcd0And5 |
+| y | 13 | 15 | p-use (F) | 13 → 15(F) | testGcd7And0 |
+| y | 13 | 15 | p-use (T) | 13 → 15(T) | testGcd0And5 |
 | y | 13 | 16 | c-use | 13 → 15(T) → 16 | testGcd0And5 |
 | y | 13 | 17 | c-use | 13 → 15(T) → 16 → 17 | testGcd0And5 |
-| y | 18 | 15 | p-use | 18 → 15 (T/F) | testGcd0And5, testGcd12And8 |
+| y | 18 | 15 | p-use (T) | 18 → 15(T) | testGcd0And5, testGcd12And8 |
+| y | 18 | 15 | p-use (F) | 18 → 15(F) | testGcd0And5, testGcd12And8 |
 | y | 18 | 16 | c-use | 18 → 15(T) → 16 | testGcd12And8 |
 | y | 18 | 17 | c-use | 18 → 15(T) → 16 → 17 | testGcd12And8 |
 | tmp | 16 | 18 | c-use | 16 → 17 → 18 | testGcd0And5 |
 
-**Тайлбар:** p-use-ийн T/F салааг нөхцөлийн хоёр өөр үр дүн гэж үзнэ. `gcd(7,0)` нь давталт орохгүй замыг шалгаж, `gcd(0,5)` болон олон давталттай тестүүд давталтын доторх DU хосуудыг шалгана.
+**Тайлбар:** p-use-ийн T/F салааг нөхцөлийн хоёр өөр үр дүн гэж үзнэ. `gcd(7,0)` нь давталтад орохгүй замыг шалгана. `gcd(0,5)` болон олон давталттай тестүүд давталтын доторх DU хосуудыг шалгана.
 
 ## A3. JUnit тестүүдийн тайлбар
 
@@ -92,8 +98,10 @@ CFG-д дараах үндсэн урсгалуудыг харуулсан:
 
 `for-each` давталтын 38-р мөрийг хоёр хэсэгт авч үзсэн:
 
-- Нөхцөл: `attendance` массивт дараагийн элемент байгаа эсэх.
-- Алхам: дараагийн элементийг `a` хувьсагчид оноох.
+- **Нөхцөл:** `attendance` массивт дараагийн элемент байгаа эсэх. Энэ нь давталтын p-use юм.
+- **Алхам:** Дараагийн элементийг `a` хувьсагчид оноох. Энэ нь `a` хувьсагчийн definition юм.
+
+CFG-ийн ирмэгүүдийг холбогдох тестийн нэрээр тэмдэглэсэн.
 
 ## B2. Definition / Use жагсаалт
 
@@ -111,39 +119,51 @@ CFG-д дараах үндсэн урсгалуудыг харуулсан:
 
 DU pair гэдэг нь нэг хувьсагчийн definition-ээс тухайн хувьсагчийн use хүртэл өөр definition-ээр таслагдаагүй замыг хэлнэ.
 
-| Хувьсагч | Def | Use | Төрөл | Def-clear зам / нөхцөл |
-|---|---:|---:|---|---|
-| attendance | 31 | 32 | p-use | Оролтын null шалгалт |
-| attendance | 31 | 38 | p-use | Null биш массивын давталтын шалгалт |
-| threshold | 31 | 32 | p-use | Сөрөг эсэхийг шалгах |
-| threshold | 31 | 50 | p-use | Давталтын дараах босго шалгалт |
-| present | 35 | 40 | c-use | Эхний эерэг ирц дээр нэмэгдүүлэх |
-| present | 35 | 50 | p-use | Эерэг элементгүй үед |
-| present | 40 | 40 | c-use | Дараагийн эерэг элемент дээр |
-| present | 40 | 50 | p-use | Давталтын дараах босго шалгалт |
-| streak | 36 | 41 | c-use | Эхний элемент эерэг байх |
-| streak | 41 | 41 | c-use | Дараалсан эерэг элементүүд |
-| streak | 41 | 42 | p-use | Нэмэгдүүлсний дараах харьцуулалт |
-| streak | 46 | 41 | c-use | Тасалсны дараа дахин ирэх |
-| best | 37 | 42 | p-use | Эхний эерэг элемент дээр streak > best |
-| best | 43 | 42 | p-use | Best шинэчлэгдсэний дараах харьцуулалт |
-| best | 37 | 53 | p-use | Эерэг ирцгүй массивын дараа |
-| best | 43 | 53 | p-use | Best шинэчлэгдсэн тохиолдолд |
-| a | 38 | 39 | p-use | Авсан элементийн утгыг шалгах |
-| score | 49 | 54 | c-use | present босго хангаагүй, best ≥ 5 |
-| score | 49 | 56 | c-use | present босго хангаагүй, best < 5 |
-| score | 51 | 54 | c-use | present босго хангасан, best ≥ 5 |
-| score | 51 | 56 | c-use | present босго хангасан, best < 5 |
-| score | 54 | 56 | c-use | Нэмэлт оноо тооцсоны дараа буцаах |
+| Хувьсагч | Def | Use | Төрөл / салаа | Def-clear зам / нөхцөл | Test ID | Covered? |
+|---|---:|---:|---|---|---|---|
+| attendance | 31 | 32 | p-use (T) | `attendance == null` | testInvalidNullAttendance | Тийм |
+| attendance | 31 | 32 | p-use (F) | `attendance != null` | testNormal | Тийм |
+| attendance | 31 | 38 | p-use (T) | Массивт дараагийн элемент байгаа | testNormal | Тийм |
+| attendance | 31 | 38 | p-use (F) | Массивын элемент дууссан | testEmpty | Тийм |
+| threshold | 31 | 32 | p-use (T) | `threshold < 0` шалгалт үнэн | testInvalidNegativeThreshold | Тийм |
+| threshold | 31 | 32 | p-use (F) | `threshold >= 0` шалгалт үнэн | testNormal | Тийм |
+| threshold | 31 | 50 | p-use (T) | `present >= threshold` | testBest5 | Тийм |
+| threshold | 31 | 50 | p-use (F) | `present < threshold` | testNormal | Тийм |
+| present | 35 | 40 | c-use | Эхний эерэг ирц дээр нэмэгдүүлэх | testNormal | Тийм |
+| present | 35 | 50 | p-use (T) | `present = 0`, `threshold = 0` | testEmpty | Тийм |
+| present | 35 | 50 | p-use (F) | `present = 0`, `threshold > 0` | testAllAbsent | Тийм |
+| present | 40 | 40 | c-use | Дараагийн эерэг элемент дээр нэмэгдүүлэх | testBest5 | Тийм |
+| present | 40 | 50 | p-use (T) | Ирцийн тоо босго хангах | testThresholdOnly | Тийм |
+| present | 40 | 50 | p-use (F) | Ирцийн тоо босго хүрэхгүй | testNormal | Тийм |
+| streak | 36 | 41 | c-use | Эхний эерэг элемент | testNormal | Тийм |
+| streak | 41 | 41 | c-use | Дараалсан эерэг элементүүд | testBest5 | Тийм |
+| streak | 41 | 42 | p-use (T) | Нэмэгдүүлсний дараа `streak > best` | testBest5 | Тийм |
+| streak | 41 | 42 | p-use (F) | Өмнөх best-ээс их биш | testNormal | Тийм |
+| streak | 46 | 41 | c-use | Тасалсны дараа дахин ирэх | testStreakResetThenFive | Тийм |
+| best | 37 | 42 | p-use (T) | Эхний эерэг элемент дээр `streak > best` | testNormal | Тийм |
+| best | 43 | 42 | p-use (T) | Best шинэчлэгдсэний дараа дахин өсөх | testBest5 | Тийм |
+| best | 43 | 42 | p-use (F) | Reset-ийн дараа өмнөх best-ээс их биш | testNormal | Тийм |
+| best | 37 | 53 | p-use (F) | Эерэг ирцгүй, `best = 0` | testAllAbsent | Тийм |
+| best | 43 | 53 | p-use (T) | `best >= 5` | testBest5 | Тийм |
+| best | 43 | 53 | p-use (F) | `0 < best < 5` | testThresholdOnly | Тийм |
+| a | 38 | 39 | p-use (T) | Дараагийн элемент эерэг | testNormal | Тийм |
+| a | 38 | 39 | p-use (F) | Дараагийн элемент тэг эсвэл сөрөг | testAllAbsent | Тийм |
+| score | 49 | 54 | c-use | 49 → 50(F) → 53(T) → 54 | testScore49To54 | Тийм |
+| score | 49 | 56 | c-use | 49 → 50(F) → 53(F) → 56 | testNormal | Тийм |
+| score | 51 | 54 | c-use | 49 → 50(T) → 51 → 53(T) → 54 | testBest5 | Тийм |
+| score | 51 | 56 | c-use | 49 → 50(T) → 51 → 53(F) → 56 | testThresholdOnly | Тийм |
+| score | 54 | 56 | c-use | 54 → 56 | testBest5 | Тийм |
 
 ### Kill нөхцөл ба биелэхгүй хосууд
 
 - `streak`-ийн 46-р мөрийн `streak = 0` нь өмнөх 36 эсвэл 41-р мөрийн definition-ийг kill хийнэ.
 - 46-р мөрөөс 42-р мөр хүртэл def-clear зам байхгүй. Учир нь дараагийн эерэг элемент дээр 41-р мөр `streak`-ийг дахин тодорхойлж, 42-р мөрөөс өмнө өмнөх definition-ийг kill хийнэ.
 - `score`-ийн 49-р мөрийн definition нь 50-р мөрийн нөхцөл худал үед 54 эсвэл 56-р мөр хүртэл хүрч болно. Харин нөхцөл үнэн бол 51-р мөр `score`-ийг дахин тодорхойлж, 49-р мөрийн definition-ийг kill хийнэ.
-- `best`-ийн 37-р мөрийн definition нь массивт эерэг элемент байхгүй үед 53-р мөр хүртэл хүрч болно. Эерэг элемент байвал 43-р мөрөөр шинэ definition үүсч болно.
+- `best`-ийн 37-р мөрийн definition нь массивт эерэг элемент байхгүй үед 53-р мөр хүртэл хүрч болно. Энэ үед `best = 0` тул 53-р мөрийн нөхцөл худал байна.
+- `best`-ийн 43-р мөрийн definition нь 53-р мөрийн нөхцөлийг үнэн эсвэл худал болгох боломжтой. Жишээлбэл, `testBest5` нь үнэн, `testThresholdOnly` нь худал салааг хамарна.
+- `score`-ийн 49 → 54 хос нь `present < threshold` боловч `best >= 5` байх үед хэрэгжинэ. `testScore49To54` тест энэ def-clear замыг хамарна.
 
-**Анхаарах:** DU pair хүснэгтийн бүх def-use хосыг def-clear замаар нь шалгаж, kill-ээр таслагдсан хосуудыг DU pair гэж тооцохгүй. JaCoCo-ийн branch coverage нь DU pair бүр хамрагдсаныг дангаараа батлахгүй.
+**Анхаарах:** DU pair хүснэгтийн хос бүрийг def-clear замаар нь шалгаж, kill-ээр таслагдсан замыг DU pair гэж тооцохгүй. JaCoCo-ийн branch coverage нь DU pair бүр хамрагдсаныг дангаараа батлахгүй.
 
 ## B4. All-Defs болон All-DU-Pairs тестүүд
 
@@ -158,14 +178,18 @@ All-Defs хамралтыг хангахын тулд `BonusTest.java` файл�
 
 All-Defs шатны үр дүн:
 
-- Нийт тест: 6
+- Нийт тест: 6 (GCD 4 + Bonus 2)
 - Алдаа: 0
 - JaCoCo Branch: 14/16
 - JaCoCo Line: 23/25
 
+**All-Defs тестийн хамгийн бага тооны тайлбар**
+
+All-Defs хамралтад хамгийн багадаа 2 Bonus тест шаардлагатай. Учир нь `score` хувьсагчийн 49 болон 51-р мөрийн definition-үүд нэг гүйцэтгэлд зэрэг үүсэх боломжгүй. 50-р мөрийн нөхцөл худал үед 49-р мөрийн definition хадгалагдаж, үнэн үед 51-р мөр шинэ definition үүсгэнэ. Иймээс хоёр definition-ийг хамруулахын тулд өөр өөр тест шаардлагатай.
+
 ### All-DU-Pairs
 
-All-DU-Pairs шатанд дараах нэмэлт тестүүдийг оруулсан:
+All-DU-Pairs шатанд дараах нэмэлт тестүүдийг оруулсан.
 
 | Тест | Зорилго |
 |---|---|
@@ -176,15 +200,36 @@ All-DU-Pairs шатанд дараах нэмэлт тестүүдийг ору�
 | testThresholdOnly | Threshold хангагдсан боловч best тав хүрэхгүй |
 | testInvalidNullAttendance | null массив |
 | testInvalidNegativeThreshold | Сөрөг threshold |
+| testKillM2WrongBestVariable | M2 мутацийг илрүүлэх |
+| testScore49To54 | score-ийн 49-р мөрийн definition-ээс 54-р мөрийн use хүртэлх DU хос |
 
-All-DU-Pairs үндсэн шатны үр дүн:
+Тестийн тооны үе шат:
 
-- Нийт тест: 13
-- Алдаа: 0
-- JaCoCo Branch: 16/16
-- JaCoCo Line: 24/25
+| Үе шат | Нийт тест | Тайлбар |
+|---|---:|---|
+| All-Defs | 6 | GCD 4 + Bonus 2 |
+| All-DU-Pairs үндсэн тестүүд | 13 | GCD 4 + Bonus 9 |
+| M2 killer тест нэмсний дараа | 14 | Нэмэлт нэг тест |
+| score DU тест нэмсний дараа | 15 | Нэмэлт нэг тест |
 
-M2 мутацийг илрүүлэх `testKillM2WrongBestVariable` тестийг дараа нь нэмж, эцсийн тестийн тоог 14 болгосон.
+Эцсийн туршилтын үр дүн:
+
+- Нийт тест: 15 (GCD 4 + Bonus 11)
+- Failures: 0
+- Errors: 0
+- Skipped: 0
+- BUILD SUCCESS
+
+### Туршилтын үр дүнгийн файлууд
+
+Үр дүнг `results/` хавтаст хадгалсан.
+
+- `mvn-verify-alldefs.txt`
+- `jacoco-alldefs.csv`
+- `mvn-verify-alldupairs.txt`
+- `jacoco-alldupairs.csv`
+- `mvn-verify-final.txt`
+- `jacoco-final.csv`
 
 ## B5. JaCoCo хамралтын үр дүн
 
@@ -194,7 +239,6 @@ M2 мутацийг илрүүлэх `testKillM2WrongBestVariable` тестий�
 | Branch Covered | 14/16 | 16/16 |
 | Branch Coverage | 87.5% | 100% |
 | Line Covered | 23/25 | 24/25 |
-| Line Coverage | 92% | 96% |
 
 Эцсийн JaCoCo тайланд `BRANCH_MISSED = 0` буюу 16 салаалал бүгд хамрагдсан.
 
@@ -222,7 +266,7 @@ Branch coverage нь нөхцөлийн салаанууд ажилласан э
 | testStreakResetThenFive | 8 | 5 |
 | testStreakSix | 8 | 5 |
 
-Нийт 14 тестээс 3 тест алдаа илрүүлсэн.
+Энэ мутацийн туршилтыг хийх үеийн тестийн багцад нийт 14 тест байсан. Үүнээс 3 тест алдаа илрүүлсэн.
 
 **Дүгнэлт:** `streak` шинэчлэгдэхгүй бол дараалсан ирцийн тоо зөв өсөхгүй. Үүний улмаас `best >= 5` нөхцөл биелэхгүй болж нэмэлт оноо олгогдохгүй.
 
@@ -237,8 +281,12 @@ Branch coverage нь нөхцөлийн салаанууд ажилласан э
 `testKillM2WrongBestVariable`
 
 ```java
-int[] attendance = {1, 0, 1, 1, 1, 1};
-assertEquals(5, DataFlowTargets.bonus(attendance, 5));
+@Test
+@DisplayName("M2 kill: present reaches five while streak is only four")
+void testKillM2WrongBestVariable() {
+    int[] attendance = {1, 0, 1, 1, 1, 1};
+    assertEquals(5, DataFlowTargets.bonus(attendance, 5));
+}
 ```
 
 Үр дүн:
@@ -261,9 +309,10 @@ int total = present + best;
 
 `total` хувьсагчийг цаашид ашиглаагүй.
 
+M3 туршилтыг хийх үеийн тестийн багцад нийт 14 тест байсан.
+
 Үр дүн:
 
-- Нийт тест: 14
 - Failures: 0
 - Errors: 0
 - BUILD SUCCESS
