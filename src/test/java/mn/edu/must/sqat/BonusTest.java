@@ -76,4 +76,11 @@ class BonusTest {
                 () -> DataFlowTargets.bonus(new int[] { 1, 1 }, -1));
     }
 
+    @Test
+    @DisplayName("M2 kill: present reaches five while streak is only four")
+    void testKillM2WrongBestVariable() {
+        int[] attendance = { 1, 0, 1, 1, 1, 1 };
+
+        assertEquals(5, DataFlowTargets.bonus(attendance, 5));
+    }
 }
